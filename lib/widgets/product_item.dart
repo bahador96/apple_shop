@@ -1,5 +1,6 @@
 import 'package:apple_shop/constants/colors.dart';
 import 'package:apple_shop/data/model/product.dart';
+import 'package:apple_shop/widgets/cached_image.dart';
 import 'package:flutter/material.dart';
 
 class ProductItem extends StatelessWidget {
@@ -27,7 +28,13 @@ class ProductItem extends StatelessWidget {
             alignment: AlignmentDirectional.center,
             children: [
               Expanded(child: Container()),
-              Image.asset('assets/images/iphone.png'),
+              SizedBox(
+                width: 98,
+                height: 98,
+                child: CachedImage(
+                  imageUrl: product.thumbnail,
+                ),
+              ),
               Positioned(
                 top: 0,
                 right: 10,
@@ -47,14 +54,14 @@ class ProductItem extends StatelessWidget {
                       Radius.circular(15),
                     ),
                   ),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
                       vertical: 2,
                       horizontal: 6,
                     ),
                     child: Text(
-                      '%4',
-                      style: TextStyle(
+                      '${product.persent!.round().toString()} %',
+                      style: const TextStyle(
                         fontFamily: 'SB',
                         fontSize: 12,
                         color: Colors.white,
@@ -113,10 +120,10 @@ class ProductItem extends StatelessWidget {
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children: [
                           Text(
-                            '49,800,000',
-                            style: TextStyle(
+                            product.price.toString(),
+                            style: const TextStyle(
                               fontFamily: 'SM',
                               fontSize: 13,
                               color: Colors.white,
@@ -125,11 +132,12 @@ class ProductItem extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            '48,800,000',
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontFamily: 'SM',
-                                color: Colors.white),
+                            product.realPrice.toString(),
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontFamily: 'SM',
+                              color: Colors.white,
+                            ),
                           ),
                         ],
                       ),
@@ -137,7 +145,8 @@ class ProductItem extends StatelessWidget {
                       SizedBox(
                         width: 24,
                         child: Image.asset(
-                            'assets/images/icon_right_arrow_cricle.png'),
+                          'assets/images/icon_right_arrow_cricle.png',
+                        ),
                       )
                     ],
                   ),

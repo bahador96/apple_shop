@@ -71,6 +71,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
                 const _GetBesSellerTitle(),
                 if (state is HomeRequestSuccessState) ...[
+                  // state.productList.fold((exceptionMessage) {
+                  //   return SliverToBoxAdapter(
+                  //     child: Text(exceptionMessage),
+                  //   );
+                  // }, (productList) {
+                  //   return _GetBestSellerProducts(productList);
+                  // })
                   state.productList.fold((exceptionMessage) {
                     return SliverToBoxAdapter(
                       child: Text(exceptionMessage),
@@ -91,8 +98,6 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class _GetMostViewedProduct extends StatelessWidget {
-  // List<Product> productList;
-
   const _GetMostViewedProduct({
     Key? key,
   }) : super(key: key);
