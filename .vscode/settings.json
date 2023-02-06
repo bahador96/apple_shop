@@ -1,0 +1,8 @@
+{
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {},
+    "dart.previewHotReloadOnSaveWatcher": false,
+    "dart.flutterGenerateLocalizationsOnSave": "never",
+    "files.autoSave": "off",
+    "editor.fontSize": 20
+}
