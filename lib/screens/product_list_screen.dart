@@ -33,6 +33,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
           backgroundColor: CustomColors.backgroundScreenColor,
           body: SafeArea(
             child: CustomScrollView(
+              physics: const BouncingScrollPhysics(),
               slivers: [
                 SliverToBoxAdapter(
                   child: Padding(

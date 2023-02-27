@@ -3,8 +3,12 @@
 import 'package:apple_shop/bloc/category/category_bloc.dart';
 import 'package:apple_shop/bloc/category/category_event.dart';
 import 'package:apple_shop/bloc/category/category_state.dart';
+import 'package:apple_shop/bloc/categoryProduct/category_product_bloc.dart';
+import 'package:apple_shop/bloc/categoryProduct/category_product_state.dart';
 import 'package:apple_shop/constants/colors.dart';
 import 'package:apple_shop/data/model/category.dart';
+import 'package:apple_shop/screens/product_list_screen.dart';
+
 import 'package:apple_shop/widgets/cached_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -116,7 +120,18 @@ class _ListCategory extends StatelessWidget {
         delegate: SliverChildBuilderDelegate(
           childCount: list?.length ?? 0,
           (context, index) {
-            return CachedImage(imageUrl: list?[index].thumbnail);
+            return GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => BlocProvider(
+                        create: (context) => CategoryProductBloc(),
+                        child: ProductListScreen(list![index]),
+                      ),
+                    ),
+                  );
+                },
+                child: CachedImage(imageUrl: list?[index].thumbnail));
           },
         ),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

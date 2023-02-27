@@ -40,6 +40,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         builder: (context, state) {
           return SafeArea(
             child: CustomScrollView(
+              physics: const BouncingScrollPhysics(),
               slivers: [
                 if (state is ProductDetailLoadingState) ...{
                   const SliverToBoxAdapter(
@@ -384,45 +385,57 @@ class _ProductPropertiesState extends State<ProductProperties> {
           Visibility(
             visible: _isVisable,
             child: Container(
-                margin: const EdgeInsets.only(
-                  left: 44,
-                  right: 44,
-                  top: 24,
+              margin: EdgeInsets.only(
+                left: 44,
+                right: 44,
+                top: (widget.productPropertyList.isNotEmpty) ? 24 : 5,
+              ),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(
+                  width: 1,
+                  color: CustomColors.grey,
                 ),
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(
-                    width: 1,
-                    color: CustomColors.grey,
-                  ),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(15),
-                  ),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(15),
                 ),
-                child: ListView.builder(
-                  itemCount: widget.productPropertyList.length,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    var property = widget.productPropertyList[index];
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Flexible(
-                          child: Text(
-                            '${property.value!} : ${property.title!}',
-                            textAlign: TextAlign.right,
-                            style: const TextStyle(
-                              fontFamily: 'sm',
-                              fontSize: 14,
-                              height: 1.8,
+              ),
+              child: (widget.productPropertyList.isNotEmpty)
+                  ? ListView.builder(
+                      itemCount: widget.productPropertyList.length,
+                      shrinkWrap: true,
+                      physics: const ClampingScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        var property = widget.productPropertyList[index];
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                '${property.value!} : ${property.title!}',
+                                textAlign: TextAlign.right,
+                                style: const TextStyle(
+                                  fontFamily: 'sm',
+                                  fontSize: 14,
+                                  height: 1.8,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                )),
+                          ],
+                        );
+                      },
+                    )
+                  : const Text(
+                      'مشخصات فنی برای این محصول یافت نشد',
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        fontFamily: 'sm',
+                        fontSize: 14,
+                        height: 1.8,
+                      ),
+                    ),
+            ),
           ),
         ],
       ),
@@ -501,10 +514,10 @@ class _ProductDescriptionState extends State<ProductDescription> {
           Visibility(
             visible: _isVisable,
             child: Container(
-              margin: const EdgeInsets.only(
+              margin: EdgeInsets.only(
                 left: 44,
                 right: 44,
-                top: 24,
+                top: (widget.productDescription.isNotEmpty) ? 24 : 5,
               ),
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -518,7 +531,9 @@ class _ProductDescriptionState extends State<ProductDescription> {
                 ),
               ),
               child: Text(
-                widget.productDescription,
+                (widget.productDescription.isNotEmpty)
+                    ? widget.productDescription
+                    : '!محصول توضیحات ندارد',
                 style: const TextStyle(
                   fontSize: 16,
                   fontFamily: 'SM',

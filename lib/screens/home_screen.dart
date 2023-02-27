@@ -34,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: BlocBuilder<HomeBloc, HomeState>(
             builder: (context, state) {
               return CustomScrollView(
+                physics: const BouncingScrollPhysics(),
                 slivers: [
                   if (state is HomeLoadingState) ...{
                     SliverToBoxAdapter(
