@@ -10,6 +10,11 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../data/datasource/category_product_datasource.dart';
+import '../data/datasource/product_detail_datasource.dart';
+import '../data/repository/category_product_repository.dart';
+import '../data/repository/product_detail_repository.dart';
+
 var locator = GetIt.instance;
 
 Future<void> getItInit() async {
@@ -31,6 +36,12 @@ Future<void> getItInit() async {
 
   locator.registerFactory<IProductDatasource>(() => ProductRemoteDatasource());
 
+  locator.registerFactory<IDetailProductDatasource>(
+      () => DetailProductRemoteDatasource());
+
+  locator.registerFactory<ICategoryProductDatasource>(
+      () => CategoryProductRemoteDatasource());
+
   // repository
   locator.registerFactory<IAuthRepository>(() => AuthenticationRepository());
 
@@ -39,4 +50,10 @@ Future<void> getItInit() async {
   locator.registerFactory<IBannerRepository>(() => BannerRepository());
 
   locator.registerFactory<IProductRepository>(() => ProductRepository());
+
+  locator.registerFactory<IDetailProductRepository>(
+      () => DetailProductRepository());
+
+  locator.registerFactory<ICategoryProductRepository>(
+      () => CategoryProductRepository());
 }
