@@ -4,7 +4,6 @@ import 'package:apple_shop/bloc/category/category_bloc.dart';
 import 'package:apple_shop/bloc/category/category_event.dart';
 import 'package:apple_shop/bloc/category/category_state.dart';
 import 'package:apple_shop/bloc/categoryProduct/category_product_bloc.dart';
-import 'package:apple_shop/bloc/categoryProduct/category_product_state.dart';
 import 'package:apple_shop/constants/colors.dart';
 import 'package:apple_shop/data/model/category.dart';
 import 'package:apple_shop/screens/product_list_screen.dart';
