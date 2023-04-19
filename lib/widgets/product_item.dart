@@ -39,7 +39,7 @@ class ProductItem extends StatelessWidget {
             Stack(
               alignment: AlignmentDirectional.center,
               children: [
-                Expanded(child: Container()),
+                // Expanded(child: Container()),
                 SizedBox(
                   width: 98,
                   height: 98,

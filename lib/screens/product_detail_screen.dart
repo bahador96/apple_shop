@@ -6,6 +6,7 @@ import 'package:apple_shop/bloc/product/product__state.dart';
 import 'package:apple_shop/bloc/product/product_bloc.dart';
 import 'package:apple_shop/bloc/product/product_event.dart';
 import 'package:apple_shop/constants/colors.dart';
+
 import 'package:apple_shop/data/model/peoduct_image.dart';
 import 'package:apple_shop/data/model/product.dart';
 import 'package:apple_shop/data/model/product_variant.dart';
@@ -297,9 +298,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         const EdgeInsets.only(top: 20, left: 44, right: 44),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        PricetagButton(),
-                        AddToBasketButton(),
+                      children: [
+                        const PricetagButton(),
+                        AddToBasketButton(widget.product),
                       ],
                     ),
                   ),
@@ -726,17 +727,20 @@ class _GalleryWidgetState extends State<GalleryWidget> {
 }
 
 class AddToBasketButton extends StatelessWidget {
-  const AddToBasketButton({Key? key}) : super(key: key);
+  Product product;
+  AddToBasketButton(this.product, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // var size = MediaQuery.of(context).size;
+
     return Stack(
       alignment: AlignmentDirectional.bottomCenter,
       children: [
         Positioned(
           child: Container(
-            height: 60,
-            width: 140,
+            height: 53,
+            width: 160,
             decoration: const BoxDecoration(
               color: CustomColors.blue,
               borderRadius: BorderRadius.all(
@@ -752,16 +756,21 @@ class AddToBasketButton extends StatelessWidget {
             ),
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-              child: const SizedBox(
-                height: 53,
-                width: 160,
-                child: Center(
-                  child: Text(
-                    'افزودن سبد خرید',
-                    style: TextStyle(
-                      fontFamily: 'SB',
-                      color: Colors.white,
-                      fontSize: 16,
+              child: GestureDetector(
+                onTap: () {
+                  context.read<ProductBloc>().add(ProductAddToBasket(product));
+                },
+                child: const SizedBox(
+                  height: 53,
+                  width: 160,
+                  child: Center(
+                    child: Text(
+                      'افزودن سبد خرید',
+                      style: TextStyle(
+                        fontFamily: 'SB',
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ),

@@ -4,5 +4,17 @@
     "dart.previewHotReloadOnSaveWatcher": false,
     "dart.flutterGenerateLocalizationsOnSave": "never",
     "files.autoSave": "off",
-    "editor.fontSize": 20
+    "editor.fontSize": 20,
+    "audioCues.diffLineInserted": "auto",
+    "audioCues.lineHasInlineSuggestion": "off",
+    "audioCues.terminalCommandFailed": "off",
+    "audioCues.taskFailed": "off",
+    "audioCues.taskCompleted": "off",
+    "audioCues.onDebugBreak": "off",
+    "audioCues.lineHasBreakpoint": "off",
+    "audioCues.lineHasError": "off",
+    "audioCues.lineHasFoldedArea": "off",
+    "audioCues.noInlayHints": "off",
+    "audioCues.notebookCellCompleted": "off",
+    "audioCues.notebookCellFailed": "off"
 }

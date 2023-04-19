@@ -2,8 +2,6 @@ import 'package:apple_shop/bloc/authentication/auth_bloc.dart';
 import 'package:apple_shop/bloc/authentication/auth_event.dart';
 import 'package:apple_shop/bloc/authentication/auth_state.dart';
 import 'package:apple_shop/constants/colors.dart';
-import 'package:apple_shop/gen/assets.gen.dart';
-import 'package:apple_shop/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -26,7 +24,8 @@ class LoginScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Assets.images.iconApplication.image(
+                  Image.asset(
+                    'assets/images/icon_application.png',
                     width: 100,
                     height: 100,
                   ),
@@ -35,7 +34,7 @@ class LoginScreen extends StatelessWidget {
                     "اپل شاپ",
                     style: TextStyle(
                       fontSize: 24,
-                      fontFamily: FontFamily.sb,
+                      fontFamily: "sb",
                       color: Colors.white,
                     ),
                   )
@@ -58,7 +57,7 @@ class LoginScreen extends StatelessWidget {
                       decoration: InputDecoration(
                         labelText: " نام کاربری",
                         labelStyle: const TextStyle(
-                          fontFamily: FontFamily.sm,
+                          fontFamily: "sm",
                           color: Colors.black,
                           fontSize: 18,
                         ),
@@ -85,7 +84,7 @@ class LoginScreen extends StatelessWidget {
                       decoration: InputDecoration(
                         labelText: "رمز عبور",
                         labelStyle: const TextStyle(
-                          fontFamily: FontFamily.sm,
+                          fontFamily: 'sm',
                           color: Colors.black,
                           fontSize: 18,
                         ),
@@ -112,7 +111,7 @@ class LoginScreen extends StatelessWidget {
                           return ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               textStyle: const TextStyle(
-                                fontFamily: FontFamily.sb,
+                                fontFamily: 'sb',
                                 fontSize: 18,
                               ),
                               maximumSize: const Size(200, 48),

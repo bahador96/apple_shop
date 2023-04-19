@@ -1,11 +1,13 @@
 import 'dart:ui';
 
+import 'package:apple_shop/bloc/basket/basket_bloc.dart';
+import 'package:apple_shop/bloc/basket/basket_event.dart';
 import 'package:apple_shop/bloc/category/category_bloc.dart';
 import 'package:apple_shop/bloc/home/home_bloc.dart';
 import 'package:apple_shop/constants/colors.dart';
+import 'package:apple_shop/data/model/card_item.dart';
 
 import 'package:apple_shop/di/di.dart';
-import 'package:apple_shop/gen/assets.gen.dart';
 import 'package:apple_shop/screens/card_screen.dart';
 import 'package:apple_shop/screens/category_screen.dart';
 
@@ -15,10 +17,15 @@ import 'package:apple_shop/screens/profile_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await getItInit();
+  await Hive.initFlutter();
+  Hive.registerAdapter(BasketItemAdapter());
+  await Hive.openBox<BasketItem>('CardBox');
+
   runApp(const MyApp());
 }
 
@@ -74,7 +81,7 @@ class _MyAppState extends State<MyApp> {
               ),
               items: [
                 BottomNavigationBarItem(
-                  icon: Assets.images.iconProfileActive.image(),
+                  icon: Image.asset('assets/images/icon_profile_active.png'),
                   activeIcon: Padding(
                     padding: const EdgeInsets.only(bottom: 5.0),
                     child: Container(
@@ -88,13 +95,13 @@ class _MyAppState extends State<MyApp> {
                           ),
                         ],
                       ),
-                      child: Assets.images.iconProfile.image(),
+                      child: Image.asset('assets/images/icon_profile.png'),
                     ),
                   ),
                   label: 'حساب کاربری',
                 ),
                 BottomNavigationBarItem(
-                  icon: Assets.images.iconBasketActive.image(),
+                  icon: Image.asset('assets/images/icon_basket_active.png'),
                   activeIcon: Padding(
                     padding: const EdgeInsets.only(bottom: 5.0),
                     child: Container(
@@ -108,13 +115,13 @@ class _MyAppState extends State<MyApp> {
                           ),
                         ],
                       ),
-                      child: Assets.images.iconBasket.image(),
+                      child: Image.asset('assets/images/icon_basket.png'),
                     ),
                   ),
                   label: 'سبد خرید',
                 ),
                 BottomNavigationBarItem(
-                  icon: Assets.images.iconCategoryActive.image(),
+                  icon: Image.asset('assets/images/icon_category_active.png'),
                   activeIcon: Padding(
                     padding: const EdgeInsets.only(bottom: 5.0),
                     child: Container(
@@ -128,13 +135,13 @@ class _MyAppState extends State<MyApp> {
                           ),
                         ],
                       ),
-                      child: Assets.images.iconCategory.image(),
+                      child: Image.asset('assets/images/icon_category.png'),
                     ),
                   ),
                   label: 'دسته بندی',
                 ),
                 BottomNavigationBarItem(
-                  icon: Assets.images.iconHomeActive.image(),
+                  icon: Image.asset('assets/images/icon_home_active.png'),
                   activeIcon: Padding(
                     padding: const EdgeInsets.only(bottom: 5.0),
                     child: Container(
@@ -148,7 +155,7 @@ class _MyAppState extends State<MyApp> {
                           ),
                         ],
                       ),
-                      child: Assets.images.iconHome.image(),
+                      child: Image.asset('assets/images/icon_home.png'),
                     ),
                   ),
                   label: 'خانه',
@@ -164,7 +171,15 @@ class _MyAppState extends State<MyApp> {
   List<Widget> getScreens() {
     return <Widget>[
       const ProfileScreen(),
-      const CardScreen(),
+      BlocProvider(
+        create: (context) {
+          var bloc = BasketBloc();
+          bloc.add(BasketFetchFromHiveEvent());
+
+          return bloc;
+        },
+        child: const CardScreen(),
+      ),
       BlocProvider(
         create: (context) => CategoryBloc(),
         child: const CategoryScreen(),
