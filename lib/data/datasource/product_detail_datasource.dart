@@ -32,7 +32,7 @@ class DetailProductRemoteDatasource extends IDetailProductDatasource {
       return respones.data['items']
           .map<ProductImage>((jsonObject) => ProductImage.fromJson(jsonObject))
           .toList();
-    } on DioError catch (ex) {
+    } on DioException catch (ex) {
       throw ApiException(ex.response?.statusCode, ex.response?.data['message']);
     } catch (ex) {
       throw ApiException(0, 'unknown error');
@@ -46,7 +46,7 @@ class DetailProductRemoteDatasource extends IDetailProductDatasource {
       return respones.data['items']
           .map<VariantType>((jsonObject) => VariantType.fromJson(jsonObject))
           .toList();
-    } on DioError catch (ex) {
+    } on DioException catch (ex) {
       throw ApiException(ex.response?.statusCode, ex.response?.data['message']);
     } catch (ex) {
       throw ApiException(0, 'unknown error');
@@ -65,7 +65,7 @@ class DetailProductRemoteDatasource extends IDetailProductDatasource {
       return respones.data['items']
           .map<Variant>((jsonObject) => Variant.fromJson(jsonObject))
           .toList();
-    } on DioError catch (ex) {
+    } on DioException catch (ex) {
       throw ApiException(ex.response?.statusCode, ex.response?.data['message']);
     } catch (ex) {
       throw ApiException(0, 'unknown error');
@@ -88,7 +88,7 @@ class DetailProductRemoteDatasource extends IDetailProductDatasource {
       }
 
       return productVariantList;
-    } on DioError catch (ex) {
+    } on DioException catch (ex) {
       throw ApiException(ex.response?.statusCode, ex.response?.data['message']);
     } catch (ex) {
       throw ApiException(0, 'unknown error');
@@ -103,7 +103,7 @@ class DetailProductRemoteDatasource extends IDetailProductDatasource {
           queryParameters: qParams);
 
       return Category.fromMapJson(response.data['items'][0]);
-    } on DioError catch (ex) {
+    } on DioException catch (ex) {
       throw ApiException(ex.response?.statusCode, ex.response?.data['message']);
     } catch (ex) {
       throw ApiException(0, 'unknown error');
@@ -119,7 +119,7 @@ class DetailProductRemoteDatasource extends IDetailProductDatasource {
       return respones.data['items']
           .map<Property>((jsonObject) => Property.fromJson(jsonObject))
           .toList();
-    } on DioError catch (ex) {
+    } on DioException catch (ex) {
       throw ApiException(ex.response?.statusCode, ex.response?.data['message']);
     } catch (ex) {
       throw ApiException(0, 'unknown error');

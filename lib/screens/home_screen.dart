@@ -10,6 +10,7 @@ import 'package:apple_shop/widgets/category_icon_item_chip.dart';
 import 'package:apple_shop/widgets/product_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -33,79 +34,93 @@ class _HomeScreenState extends State<HomeScreen> {
         body: SafeArea(
           child: BlocBuilder<HomeBloc, HomeState>(
             builder: (context, state) {
-              return CustomScrollView(
-                physics: const BouncingScrollPhysics(),
-                slivers: [
-                  if (state is HomeLoadingState) ...{
-                    SliverToBoxAdapter(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
-                        children: const [
-                          SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(),
-                          ),
-                        ],
-                      ),
-                    ),
-                  } else ...{
-                    const _GetSearchBox(),
-                    if (state is HomeRequestSuccessState) ...[
-                      state.bannerList.fold(
-                        (exceptionmessage) {
-                          return SliverToBoxAdapter(
-                            child: Text(exceptionmessage),
-                          );
-                        },
-                        (listBanners) {
-                          return _GetBanners(listBanners);
-                        },
-                      ),
-                    ],
-                    const _GetCategoryListTitle(),
-                    if (state is HomeRequestSuccessState) ...[
-                      state.categoryList.fold((exceptionMessage) {
-                        return SliverToBoxAdapter(
-                          child: Text(exceptionMessage),
-                        );
-                      }, (categoryList) {
-                        return _GetCatgoryList(categoryList);
-                      })
-                    ],
-
-                    // title best seller
-                    const _GetBesSellerTitle(),
-
-                    // پر فورش ترین ها
-                    if (state is HomeRequestSuccessState) ...[
-                      state.bestSellerProductList.fold((exceptionMessage) {
-                        return SliverToBoxAdapter(
-                            child: Text(exceptionMessage));
-                      }, (productList) {
-                        return _GetBestSellerProducts(productList);
-                      })
-                    ],
-
-                    // title most viwed
-                    const _GetMostViwedTitle(),
-
-                    // پر بازدید ترین ها
-                    if (state is HomeRequestSuccessState) ...[
-                      state.hotestProductList.fold((exceptionMessage) {
-                        return SliverToBoxAdapter(
-                          child: Text(exceptionMessage),
-                        );
-                      }, (productList) {
-                        return _GetMostViewedProduct(productList);
-                      })
-                    ],
-                  },
-                ],
-              );
+              return _getHomeScreenontent(state);
             },
           ),
+        ),
+      ),
+    );
+  }
+}
+
+Widget _getHomeScreenontent(HomeState state) {
+  if (state is HomeLoadingState) {
+    return const Center(
+      child: LoadingAnimation(),
+    );
+  } else if (state is HomeRequestSuccessState) {
+    return CustomScrollView(
+      physics: const BouncingScrollPhysics(),
+      slivers: [
+        const _GetSearchBox(),
+          state.bannerList.fold(
+            (exceptionmessage) {
+              return SliverToBoxAdapter(
+                child: Text(exceptionmessage),
+              );
+            },
+            (listBanners) {
+              return _GetBanners(listBanners);
+            },
+          ),
+        const _GetCategoryListTitle(),
+          state.categoryList.fold((exceptionMessage) {
+            return SliverToBoxAdapter(
+              child: Text(exceptionMessage),
+            );
+          }, (categoryList) {
+            return _GetCatgoryList(categoryList);
+          })
+
+        // title best seller
+        const _GetBesSellerTitle(),
+
+        // پر فورش ترین ها
+          state.bestSellerProductList.fold((exceptionMessage) {
+            return SliverToBoxAdapter(child: Text(exceptionMessage));
+          }, (productList) {
+            return _GetBestSellerProducts(productList);
+          }),
+
+        // title most viwed
+         const _GetMostViwedTitle(),
+
+        // پر بازدید ترین ها
+          state.hotestProductList.fold((exceptionMessage) {
+            return SliverToBoxAdapter(
+              child: Text(exceptionMessage),
+            );
+          }, (productList) {
+            return _GetMostViewedProduct(productList);
+          })
+      ],
+    );
+  } else {
+    return const Center(
+      child: Text("error"),
+    );
+  }
+}
+
+class LoadingAnimation extends StatelessWidget {
+  const LoadingAnimation({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 60,
+      height: 60,
+      child: const Center(
+        child: LoadingIndicator(
+          indicatorType: Indicator.ballRotateChase,
+
+          /// Required, The loading type of the widget
+          colors: [Colors.blue],
+
+          /// Optional, The color collections
+          strokeWidth: 0.1,
         ),
       ),
     );
@@ -286,9 +301,9 @@ class _GetCategoryListTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
+    return const SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.only(
+        padding: EdgeInsets.only(
           left: 44,
           right: 44,
           bottom: 20,
@@ -296,7 +311,7 @@ class _GetCategoryListTitle extends StatelessWidget {
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
-          children: const [
+          children: [
             Text(
               'دسته بندی',
               style: TextStyle(

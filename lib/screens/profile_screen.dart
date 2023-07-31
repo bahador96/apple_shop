@@ -12,11 +12,7 @@ class ProfileScreen extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(
-                right: 44,
-                left: 44,
-                bottom: 32,
-              ),
+              padding: const EdgeInsets.only(right: 44, left: 44, bottom: 32),
               child: Container(
                 height: 46,
                 decoration: const BoxDecoration(
@@ -34,10 +30,9 @@ class ProfileScreen extends StatelessWidget {
                         'حساب کاربری',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontFamily: 'SB',
-                          fontSize: 16,
-                          color: CustomColors.blue,
-                        ),
+                            fontFamily: 'SB',
+                            fontSize: 16,
+                            color: CustomColors.blue),
                       ),
                     ),
                   ],
@@ -53,12 +48,12 @@ class ProfileScreen extends StatelessWidget {
               '09369421435',
               style: TextStyle(fontFamily: 'SM', fontSize: 10),
             ),
-            Directionality(
+            const Directionality(
               textDirection: TextDirection.rtl,
               child: Wrap(
                 runSpacing: 20,
                 spacing: 20,
-                children: const [
+                children: [
                   // CategoryItemChip(),
                   // CategoryItemChip(),
                   // CategoryItemChip(),
@@ -92,10 +87,7 @@ class ProfileScreen extends StatelessWidget {
             const Text(
               'inatagram.com/bahador_22',
               style: TextStyle(
-                fontSize: 10,
-                fontFamily: 'SB',
-                color: CustomColors.grey,
-              ),
+                  fontSize: 10, fontFamily: 'SB', color: CustomColors.grey),
             ),
           ],
         ),

@@ -2,6 +2,8 @@
 
 import 'dart:ui';
 
+import 'package:apple_shop/bloc/basket/basket_bloc.dart';
+import 'package:apple_shop/bloc/basket/basket_event.dart';
 import 'package:apple_shop/bloc/product/product__state.dart';
 import 'package:apple_shop/bloc/product/product_bloc.dart';
 import 'package:apple_shop/bloc/product/product_event.dart';
@@ -27,11 +29,27 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
-  void initState() {
-    BlocProvider.of<ProductBloc>(context).add(
-        ProductInitializeEvent(widget.product.id, widget.product.categoryId));
-    super.initState();
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) {
+        var bloc = ProductBloc();
+        bloc.add(ProductInitializeEvent(
+            widget.product.id, widget.product.categoryId));
+        return bloc;
+      },
+      child: DetailContentWidget(parentWidget: widget),
+    );
   }
+}
+
+class DetailContentWidget extends StatelessWidget {
+  const DetailContentWidget({
+    super.key,
+    required this.parentWidget,
+  });
+
+  final ProductDetailScreen parentWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +132,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 20),
                     child: Text(
-                      widget.product.name,
+                      parentWidget.product.name,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontSize: 16,
@@ -133,7 +151,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     },
                     (productImageList) {
                       return GalleryWidget(
-                          widget.product.thumbnail, productImageList);
+                          parentWidget.product.thumbnail, productImageList);
                     },
                   ),
                 },
@@ -163,7 +181,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     },
                   )
                 },
-                ProductDescription(widget.product.description),
+                ProductDescription(parentWidget.product.description),
                 SliverToBoxAdapter(
                   child: Container(
                     margin: const EdgeInsets.only(
@@ -300,7 +318,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const PricetagButton(),
-                        AddToBasketButton(widget.product),
+                        AddToBasketButton(parentWidget.product),
                       ],
                     ),
                   ),
@@ -732,15 +750,13 @@ class AddToBasketButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // var size = MediaQuery.of(context).size;
-
     return Stack(
       alignment: AlignmentDirectional.bottomCenter,
       children: [
         Positioned(
           child: Container(
-            height: 53,
-            width: 160,
+            height: 57,
+            width: 140,
             decoration: const BoxDecoration(
               color: CustomColors.blue,
               borderRadius: BorderRadius.all(
@@ -759,10 +775,12 @@ class AddToBasketButton extends StatelessWidget {
               child: GestureDetector(
                 onTap: () {
                   context.read<ProductBloc>().add(ProductAddToBasket(product));
+
+                  context.read<BasketBloc>().add(BasketFetchFromHiveEvent());
                 },
                 child: const SizedBox(
-                  height: 53,
-                  width: 160,
+                  height: 57,
+                  width: 135,
                   child: Center(
                     child: Text(
                       'افزودن سبد خرید',
@@ -825,10 +843,10 @@ class PricetagButton extends StatelessWidget {
                           fontFamily: 'SM', fontSize: 12, color: Colors.white),
                     ),
                     const SizedBox(width: 5),
-                    Column(
+                    const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         Text(
                           '49,800,000',
                           style: TextStyle(

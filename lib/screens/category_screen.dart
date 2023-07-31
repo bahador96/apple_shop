@@ -1,5 +1,3 @@
-// ignore_for_file: must_be_immutable
-
 import 'package:apple_shop/bloc/category/category_bloc.dart';
 import 'package:apple_shop/bloc/category/category_event.dart';
 import 'package:apple_shop/bloc/category/category_state.dart';
@@ -86,7 +84,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       child: Center(child: Text("error")),
                     );
                   }, (r) {
-                    return _ListCategory(
+                    return ListCategory(
                       list: r,
                     );
                   });
@@ -103,13 +101,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
   }
 }
 
-class _ListCategory extends StatelessWidget {
-  _ListCategory({
+class ListCategory extends StatelessWidget {
+  const ListCategory({
     Key? key,
     required this.list,
   }) : super(key: key);
 
-  List<Category>? list;
+  final List<Category>? list;
 
   @override
   Widget build(BuildContext context) {

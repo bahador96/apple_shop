@@ -20,7 +20,7 @@ class CategoryRemoteDatasource extends ICategoryDatasource {
       return response.data['items']
           .map<Category>((jsonObject) => Category.fromMapJson(jsonObject))
           .toList();
-    } on DioError catch (ex) {
+    } on DioException catch (ex) {
       throw ApiException(
         ex.response?.statusCode,
         ex.response?.data['message'],

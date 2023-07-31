@@ -1,4 +1,5 @@
 import 'package:apple_shop/bloc/basket/basket_bloc.dart';
+import 'package:apple_shop/bloc/basket/basket_event.dart';
 
 import 'package:apple_shop/bloc/basket/basket_state.dart';
 import 'package:apple_shop/constants/colors.dart';
@@ -8,108 +9,126 @@ import 'package:apple_shop/widgets/cached_image.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/adapters.dart';
 
-class CardScreen extends StatelessWidget {
+class CardScreen extends StatefulWidget {
   const CardScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    var box = Hive.box<BasketItem>('CardBox');
+  State<CardScreen> createState() => _CardScreenState();
+}
 
+class _CardScreenState extends State<CardScreen> {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: CustomColors.backgroundScreenColor,
-      body: SafeArea(child: BlocBuilder<BasketBloc, BasketSate>(
-        builder: (context, state) {
-          return Stack(
-            alignment: AlignmentDirectional.bottomCenter,
-            children: [
-              CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        right: 44,
-                        left: 44,
-                        bottom: 32,
-                      ),
-                      child: Container(
-                        height: 46,
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15),
-                          ),
+      body: SafeArea(
+        child: BlocBuilder<BasketBloc, BasketSate>(
+          builder: (context, state) {
+            return Stack(
+              alignment: AlignmentDirectional.bottomCenter,
+              children: [
+                CustomScrollView(
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          right: 44,
+                          left: 44,
+                          bottom: 32,
                         ),
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 16),
-                            Image.asset('assets/images/icon_apple_blue.png'),
-                            const Expanded(
-                              child: Text(
-                                'سبد خرید',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontFamily: 'SB',
-                                  fontSize: 16,
-                                  color: CustomColors.blue,
+                        child: Container(
+                          height: 46,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(15),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              const SizedBox(width: 16),
+                              Image.asset('assets/images/icon_apple_blue.png'),
+                              const Expanded(
+                                child: Text(
+                                  'سبد خرید',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontFamily: 'SB',
+                                    fontSize: 16,
+                                    color: CustomColors.blue,
+                                  ),
                                 ),
                               ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    if (state is BasketDataFetchedState) ...{
+                      state.basketItemList.fold(
+                        (l) {
+                          return SliverToBoxAdapter(
+                            child: Text(l),
+                          );
+                        },
+                        (basketItemList) {
+                          return SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              childCount: basketItemList.length,
+                              (context, index) {
+                                return CardItem(basketItemList[index]);
+                              },
                             ),
-                          ],
+                          );
+                        },
+                      ),
+                    },
+                    const SliverPadding(
+                      padding: EdgeInsets.only(bottom: 100),
+                    ),
+                  ],
+                ),
+                if (state is BasketDataFetchedState) ...{
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 44, right: 44, bottom: 20),
+                    child: SizedBox(
+                      height: 53,
+                      width: MediaQuery.of(context).size.width,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          textStyle: const TextStyle(
+                            fontFamily: 'sm',
+                            fontSize: 18,
+                          ),
+                          backgroundColor: CustomColors.green,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                        onPressed: () {
+                          context
+                              .read<BasketBloc>()
+                              .add(BasketPaymentInitEvent());
+                          context
+                              .read<BasketBloc>()
+                              .add(BasketPaymentRequestEvent());
+                        },
+                        child: Text(
+                          (state.basketFinalPrice == 0)
+                              ? 'سبد خرید شما خالی است'
+                              : '${state.basketFinalPrice}',
                         ),
                       ),
                     ),
                   ),
-                  if (state is BasketDataFetchedState) ...{
-                    state.basketItemList.fold(
-                      (l) {
-                        return SliverToBoxAdapter(
-                          child: Text(l),
-                        );
-                      },
-                      (basketItemList) {
-                        return SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            childCount: basketItemList.length,
-                            (context, index) {
-                              return CardItem(basketItemList[index]);
-                            },
-                          ),
-                        );
-                      },
-                    ),
-                  },
-                  const SliverPadding(
-                    padding: EdgeInsets.only(bottom: 100),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 44, right: 44, bottom: 20),
-                child: SizedBox(
-                  height: 53,
-                  width: MediaQuery.of(context).size.width,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      textStyle: const TextStyle(
-                        fontFamily: 'sm',
-                        fontSize: 18,
-                      ),
-                      backgroundColor: CustomColors.green,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: const Text('ادامه ی فرایند'),
-                  ),
-                ),
-              ),
-            ],
-          );
-        },
-      )),
+                }
+              ],
+            );
+          },
+        ),
+      ),
     );
   }
 }
@@ -125,7 +144,7 @@ class CardItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.fromLTRB(44, 0, 44, 20),
-      height: 249,
+      height: 255,
       width: MediaQuery.of(context).size.width,
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -145,9 +164,9 @@ class CardItem extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        const Text(
-                          'آیفون 13 پرومکس',
-                          style: TextStyle(
+                        Text(
+                          basketItem.name,
+                          style: const TextStyle(
                             fontSize: 16,
                             fontFamily: "sb",
                           ),
@@ -203,9 +222,9 @@ class CardItem extends StatelessWidget {
                             const SizedBox(
                               width: 4,
                             ),
-                            const Text(
-                              '29500000',
-                              style: TextStyle(
+                            Text(
+                              '${basketItem.price}',
+                              style: const TextStyle(
                                 fontFamily: "sm",
                                 fontSize: 12,
                               ),
@@ -248,7 +267,7 @@ class CardItem extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            OptionCheap(
+                            const OptionCheap(
                               'آبی',
                               color: '4287f5',
                             ),
@@ -284,12 +303,12 @@ class CardItem extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Text('تومان'),
-                SizedBox(width: 5),
+              children: [
+                const Text('تومان'),
+                const SizedBox(width: 5),
                 Text(
-                  '59.000.000',
-                  style: TextStyle(
+                  '${basketItem.realPrice}',
+                  style: const TextStyle(
                     fontFamily: "sb",
                     fontSize: 16,
                   ),
@@ -304,9 +323,9 @@ class CardItem extends StatelessWidget {
 }
 
 class OptionCheap extends StatelessWidget {
-  String? color;
-  String title;
-  OptionCheap(
+  final String? color;
+  final String title;
+  const OptionCheap(
     this.title, {
     Key? key,
     this.color,
