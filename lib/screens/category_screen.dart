@@ -10,6 +10,8 @@ import 'package:apple_shop/widgets/cached_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../widgets/loading_animation.dart';
+
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({Key? key}) : super(key: key);
 
@@ -29,72 +31,75 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: CustomColors.backgroundScreenColor,
-      body: SafeArea(
-        child: CustomScrollView(
-          physics: const BouncingScrollPhysics(),
-          slivers: [
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  right: 44,
-                  left: 44,
-                  bottom: 32,
-                ),
-                child: Container(
-                  height: 46,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(15),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: CustomColors.backgroundScreenColor,
+        body: BlocBuilder<CategoryBloc, CategoryState>(
+          builder: (context, state) {
+            if (state is CategoryLoadingState) {
+              return const Center(
+                child: LoadingAnimation(),
+              );
+            }
+            return CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      right: 44,
+                      left: 44,
+                      bottom: 32,
                     ),
-                  ),
-                  child: Row(
-                    children: [
-                      const SizedBox(width: 16),
-                      Image.asset('assets/images/icon_apple_blue.png'),
-                      const Expanded(
-                        child: Text(
-                          'دسته بندی',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontFamily: 'SB',
-                            fontSize: 16,
-                            color: CustomColors.blue,
-                          ),
+                    child: Container(
+                      height: 46,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(15),
                         ),
                       ),
-                    ],
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 16),
+                          Image.asset('assets/images/icon_apple_blue.png'),
+                          const Expanded(
+                            child: Text(
+                              'دسته بندی',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'SB',
+                                fontSize: 16,
+                                color: CustomColors.blue,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-            BlocBuilder<CategoryBloc, CategoryState>(
-              builder: (context, state) {
-                if (state is CategoryLoadingState) {
-                  return const SliverToBoxAdapter(
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                }
-
-                if (state is CategoryResponseState) {
-                  return state.response.fold((l) {
+                BlocBuilder<CategoryBloc, CategoryState>(
+                  builder: (context, state) {
+                    if (state is CategoryResponseState) {
+                      return state.response.fold((l) {
+                        return const SliverToBoxAdapter(
+                          child: Center(child: Text("error")),
+                        );
+                      }, (r) {
+                        return ListCategory(
+                          list: r,
+                        );
+                      });
+                    }
                     return const SliverToBoxAdapter(
-                      child: Center(child: Text("error")),
+                      child: Text("error"),
                     );
-                  }, (r) {
-                    return ListCategory(
-                      list: r,
-                    );
-                  });
-                }
-                return const SliverToBoxAdapter(
-                  child: Text("error"),
-                );
-              },
-            ),
-          ],
+                  },
+                ),
+              ],
+            );
+          },
         ),
       ),
     );

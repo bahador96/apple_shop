@@ -10,21 +10,11 @@ import 'package:apple_shop/widgets/category_icon_item_chip.dart';
 import 'package:apple_shop/widgets/product_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 
-class HomeScreen extends StatefulWidget {
+import '../widgets/loading_animation.dart';
+
+class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  @override
-  void initState() {
-    BlocProvider.of<HomeBloc>(context).add(HomeGetInitilzeData());
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
         body: SafeArea(
           child: BlocBuilder<HomeBloc, HomeState>(
             builder: (context, state) {
-              return _getHomeScreenontent(state);
+              return _getHomeScreenContent(state, context);
             },
           ),
         ),
@@ -43,16 +33,20 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-Widget _getHomeScreenontent(HomeState state) {
+Widget _getHomeScreenContent(HomeState state, BuildContext context) {
   if (state is HomeLoadingState) {
     return const Center(
       child: LoadingAnimation(),
     );
   } else if (state is HomeRequestSuccessState) {
-    return CustomScrollView(
-      physics: const BouncingScrollPhysics(),
-      slivers: [
-        const _GetSearchBox(),
+    return RefreshIndicator(
+      onRefresh: () async {
+        context.read<HomeBloc>().add(HomeGetInitilzeData());
+      },
+      child: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          const _GetSearchBox(),
           state.bannerList.fold(
             (exceptionmessage) {
               return SliverToBoxAdapter(
@@ -63,29 +57,29 @@ Widget _getHomeScreenontent(HomeState state) {
               return _GetBanners(listBanners);
             },
           ),
-        const _GetCategoryListTitle(),
+          const _GetCategoryListTitle(),
           state.categoryList.fold((exceptionMessage) {
             return SliverToBoxAdapter(
               child: Text(exceptionMessage),
             );
           }, (categoryList) {
             return _GetCatgoryList(categoryList);
-          })
+          }),
 
-        // title best seller
-        const _GetBesSellerTitle(),
+          // title best seller
+          const _GetBesSellerTitle(),
 
-        // پر فورش ترین ها
+          // پر فورش ترین ها
           state.bestSellerProductList.fold((exceptionMessage) {
             return SliverToBoxAdapter(child: Text(exceptionMessage));
           }, (productList) {
             return _GetBestSellerProducts(productList);
           }),
 
-        // title most viwed
-         const _GetMostViwedTitle(),
+          // title most viwed
+          const _GetMostViwedTitle(),
 
-        // پر بازدید ترین ها
+          // پر بازدید ترین ها
           state.hotestProductList.fold((exceptionMessage) {
             return SliverToBoxAdapter(
               child: Text(exceptionMessage),
@@ -93,36 +87,12 @@ Widget _getHomeScreenontent(HomeState state) {
           }, (productList) {
             return _GetMostViewedProduct(productList);
           })
-      ],
+        ],
+      ),
     );
   } else {
     return const Center(
       child: Text("error"),
-    );
-  }
-}
-
-class LoadingAnimation extends StatelessWidget {
-  const LoadingAnimation({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 60,
-      height: 60,
-      child: const Center(
-        child: LoadingIndicator(
-          indicatorType: Indicator.ballRotateChase,
-
-          /// Required, The loading type of the widget
-          colors: [Colors.blue],
-
-          /// Optional, The color collections
-          strokeWidth: 0.1,
-        ),
-      ),
     );
   }
 }
